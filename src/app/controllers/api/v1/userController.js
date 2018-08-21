@@ -1,10 +1,12 @@
 var userControllerRouter = require('express').Router();
 
 var User = require('../../../models/user');
+var Address = require('../../../models/address');
 var logger = require('../../../lib/logger');
 var userService = require('../../../services/userService');
+const handleWorkBook = require('../../../services/workBook');
 
-
+var WorkBook = new handleWorkBook();
 userControllerRouter.post("/createUser", async (req, res)=>{
     try {
         console.log("Inside userControllerRouter");
@@ -17,6 +19,8 @@ userControllerRouter.post("/createUser", async (req, res)=>{
 
     res.status(200).json(user);
 });
+
+userControllerRouter.post('/getWorkBook', WorkBook.readData)
 
 
 

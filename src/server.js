@@ -35,9 +35,9 @@ async function logResponse(request, response, next) {
 // apply the required middlewares for the application
 var applyMiddleWares = (app) => {
     app.use(cors());
+    debugger;
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    
     app.use(logRequest);
     app.use(logResponse);
     app.use('/opex', apiRouter)

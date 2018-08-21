@@ -13,6 +13,8 @@ sequelize
         console.log("error in conntecting  to databse",err);
     });
 
+   
+
     sequelize
     .sync({force:false})
     .then((success) => { 

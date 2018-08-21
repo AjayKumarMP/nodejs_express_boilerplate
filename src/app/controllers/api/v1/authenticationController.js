@@ -3,11 +3,14 @@ const User = require('../../../models/user');
 const config = require('../../../../../config/env');
 const { setResponse, response_200, response_401, response_500, response_404 } = require('../../../lib/apiResponseFormat');
 
-module.exports = {
+class AuthenticationController {
+
+    constructor() {}
+
     // function which verify the credentials and issues an token in the response
-    login: async (req, res, next) => {
+    async login(req, res, next) {
         try {
-            var user = {id:1,name:"user",email:"user@gmail.com",password:"password"};
+            var user = { id: 1, name: "user", email: "user@gmail.com", password: "password" };
             // var user = await User.findOne({ where: { email: req.body.email } });
             if (!user) {
                 setResponse(res, response_404("No User Found, Please check the credentials"));
@@ -23,30 +26,33 @@ module.exports = {
             console.log("Error in logging in the USer", err.message);
             setResponse(res, response_500("Error in logging in the USer", err.message));
         }
-    },
+    }
 
-    logout: async (req, res, next) => {
+    async logout(req, res, next) {
         setResponse(res, response_200({ auth: false, token: null }));
-    },
+    }
 
-    verifyAUth: async (req, res, next) => {
+    async verifyAUth(req, res, next) {
         var token = req.headers['x-access-token'];
         if (!token) {
             setResponse(res, response_401({ auth: false, message: 'No token provided.' }));
         }
         try {
             var decoded = await jwt.verify(token, config.secret);
-            var user = {id:1,name:"user",email:"user@gmail.com",password:"password"};
+            var user = { id: 10, name: "user", email: "user@gmail.com", password: "password" };
             // var user = await User.findById(decoded.id);
-            if(!user){
+            if (!user) {
                 setResponse(resp, response_401("UnAUthorised Access"));
             }
+            console.log(decoded);
             req.userId = user.id;
             next();
         } catch (error) {
-            console.log("Error in logging in the USer", err.message);
-            setResponse(res, response_500("Error in verifying AUTH the USer", err.message));
+            console.log("Error in logging in the USer", error.message);
+            setResponse(res, response_500("Error in verifying AUTH the USer", error.message));
         }
 
     }
 }
+
+module.exports = new AuthenticationController();
