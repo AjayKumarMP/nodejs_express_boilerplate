@@ -8,6 +8,7 @@ var apiRouter = require('./routes');
 var logger = require('./app/lib/logger');
 var swaagerDoc = require('./swagger.json');
 var { sequelize } = require('./app/config/db');
+const sheduler = require('./app/jobs/scheduler');
 
 
 async function logRequest(request, response, next) {
@@ -35,7 +36,6 @@ async function logResponse(request, response, next) {
 // apply the required middlewares for the application
 var applyMiddleWares = (app) => {
     app.use(cors());
-    debugger;
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(logRequest);
