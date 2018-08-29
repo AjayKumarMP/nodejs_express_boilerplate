@@ -34,7 +34,7 @@ sequelize
             return data;
         } catch (error) {
             logger.error("Error in executing native query: ",query,error.message)
-            return null;
+            throw new Error("Error in executing native query: ",query,error.message);
         }
         
     };

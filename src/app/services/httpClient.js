@@ -14,7 +14,7 @@ module.exports = {
             },
             body: post_data
         };
-        httpClient.post(options, (err, httpResponse, body) => {
+        await httpClient.post(options, (err, httpResponse, body) => {
             if (err) {
                 throw Error('upload failed due to:', err.message);
             }

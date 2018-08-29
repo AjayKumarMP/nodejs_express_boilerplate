@@ -6,13 +6,14 @@ const { postToUrl } = require('../services/httpClient');
 module.exports = {
 
     sendPostDataToSparkHub: async (resourceName, isMultiData, dataId, resData) => {
-        var OpexSparkhubResource = await executeNativeQuery(getSparkHubResource, { resourceName });
+        var res = await executeNativeQuery(getSparkHubResource, { resourceName });
+        var {resourceKey, appKey, destAppKey, sparkUrl} = res[0];
         var response = '';
-        if (OpexSparkhubResource) {
+        if (sparkUrl) {
             var list = {
-                "resKey": OpexSparkhubResource[0].resourceKey,
-                "srcAppKey": OpexSparkhubResource[0].appKey,
-                "destAppKey": OpexSparkhubResource[0].destAppKey,
+                "resKey": resourceKey,
+                "srcAppKey": appKey,
+                "destAppKey": destAppKey,
             }
             if (isMultiData) {
                 list["multi"] = resData;
@@ -20,10 +21,13 @@ module.exports = {
                 list["dataId"] = dataId;
                 list["resData"] = resData;
             }
-            logger.info(" invoking spark server with url " + OpexSparkhubResource[0].sparkApiUrl + " for resource " + resourceName);
-            response = await postToUrl("http://localhost:9090/createHeanthSection", list);
+            logger.info(" invoking spark server with url " + sparkUrl + " for resource " + resourceName);
+            response = await postToUrl(sparkUrl, list);
+            console.log(response);
+            return response;
         } else {
             logger.error("there are no resource with resourceName:", resourceName);
+            throw new Error("there are no resource with resourceName:", resourceName);
         }
     },
 }
